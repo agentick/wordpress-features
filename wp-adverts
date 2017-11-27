@@ -1,0 +1,27 @@
+Wp-adverts plugin asks you to login on "Post add" page and the link directs to wp-login page. In order to direct it to my-account page. Use following code in wp-adverts/templates/functions.php. It also removes default logout url
+
+function adverts_field_account( $field ) {
+    
+    $fa = $field;
+    
+    if(is_user_logged_in() ) {
+        
+        $text = __('You are posting as <strong>%1$s</strong>.', 'adverts');
+        printf( '<div>'.$text.'</div>', wp_get_current_user()->display_name, wp_logout_url() );
+        
+    } else {
+        
+        $text = __('Create an account for me so I can manage all my ads from one place (password will be emailed to you) or <a href="https://www.agentick.com/in/my-account/">Sign In</a>', 'adverts');
+        $text = sprintf( $text, wp_login_url( get_permalink() ) );
+        
+        $fa["options"] = array(
+            array(
+                "value" => "1", 
+                "text" => $text
+            )
+        );
+        
+        adverts_field_checkbox($fa);
+    }
+    
+}
